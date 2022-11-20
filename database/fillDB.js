@@ -12,18 +12,18 @@ const MAX_SUBSCRIPTIONS = 150;
 
 for (let i = 0; i < NUMBER_OF_USERS; i ++){
         if (Math.random()<0.5){
-            await db.query(`INSERT INTO Users (first_name, gender) VALUES ('${getFemaleName()}', 'female')`)
+            await db.query(`INSERT INTO Users (first_name, gender) VALUES ('${getFemaleName()}', 'female')`);
         }else {
-            await db.query(`INSERT INTO Users (first_name, gender) VALUES ('${getMaleName()}', 'male')`)
+            await db.query(`INSERT INTO Users (first_name, gender) VALUES ('${getMaleName()}', 'male')`);
         }
     }
 
-for (let i = 1; i < NUMBER_OF_USERS; i ++){
+for (let i = 1; i < NUMBER_OF_USERS+1; i ++){
     if (Math.random()>0.05){
-        const maxSubscriptions = Math.min(NUMBER_OF_USERS, MAX_SUBSCRIPTIONS)
-        const subscribersCount = Math.floor(Math.random()*maxSubscriptions)
+        const maxSubscriptions = Math.min(NUMBER_OF_USERS, MAX_SUBSCRIPTIONS);
+        const subscribersCount = Math.floor(Math.random()*maxSubscriptions);
         getRandomIDs(subscribersCount, NUMBER_OF_USERS).forEach((ID)=>{
-            db.query(`INSERT INTO subscriptions (userID, subscriberID) VALUES ('${i}', '${ID}')`)
+            if (i !== ID) db.query(`INSERT INTO subscriptions (userId, subscriberId) VALUES ('${ID}', '${i}')`);
         })
     }
 }

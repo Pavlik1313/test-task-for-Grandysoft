@@ -7,24 +7,24 @@ const pool = new Pool({
     host: configDB.host,
     port: configDB.port
 })
-
-pool.query(`DROP DATABASE IF EXISTS ${configDB.database};
-            CREATE DATABASE ${configDB.database}`).then(async ()=>
-{
-    const db = new Pool(configDB)
+const createDB = async () => {
+    await pool.query(`DROP DATABASE IF EXISTS ${configDB.database}`);
+    await pool.query(`CREATE DATABASE ${configDB.database}`);
+    const db = new Pool(configDB);
     await db.query(`
         CREATE TABLE users 
         (
-            ID SERIAL PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             first_name CHARACTER VARYING(255), 
             gender CHARACTER VARYING(30)
-        );
-`)
+        );`)
     await db.query(`
         CREATE TABLE subscriptions
         (
-            userID INTEGER REFERENCES users (ID),
-            subscriberID INTEGER REFERENCES users (ID),
-            PRIMARY KEY (userID, subscriberID)
+            userId INTEGER REFERENCES users (id),
+            subscriberId INTEGER REFERENCES users (id),
+            PRIMARY KEY (userId, subscriberId)
         );`)
-})
+
+}
+createDB()
